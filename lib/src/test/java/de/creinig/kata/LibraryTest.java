@@ -3,12 +3,14 @@
  */
 package de.creinig.kata;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.Test;
 
 class LibraryTest {
-    @Test void someLibraryMethodReturnsTrue() {
-        Library classUnderTest = new Library();
-        assertTrue(classUnderTest.someLibraryMethod(), "someLibraryMethod should return 'true'");
-    }
+  @Test
+  void someLibraryMethodReturnsTrue() {
+    Library classUnderTest = new Library();
+    assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
+  }
 }
