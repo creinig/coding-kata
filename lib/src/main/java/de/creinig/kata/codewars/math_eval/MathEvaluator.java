@@ -3,6 +3,9 @@ package de.creinig.kata.codewars.math_eval;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * https://www.codewars.com/kata/52a78825cdfc2cfc87000005/train/java
+ */
 public class MathEvaluator {
 
   public double calculate(String expression) {
