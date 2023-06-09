@@ -1,4 +1,4 @@
-# java-kata
+# coding-kata
 
 My etc on [codewars](https://www.codewars.com/users/creinig) and the like
 
