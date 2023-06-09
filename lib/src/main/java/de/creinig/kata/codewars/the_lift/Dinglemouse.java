@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiPredicate;
 
+/**
+ * https://www.codewars.com/kata/58905bfa1decb981da00009e
+ */
 public class Dinglemouse {
 
   public static int[] theLift(final int[][] queues, final int capacity) {
