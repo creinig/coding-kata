@@ -1,6 +1,6 @@
 # coding-kata
 
-My etc on [codewars](https://www.codewars.com/users/creinig) and the like
+My kata on [codewars](https://www.codewars.com/users/creinig) and the like
 
 ## My Philosophy for solving Kata
 
