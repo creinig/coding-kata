@@ -1,5 +1,8 @@
 package de.creinig.kata.codewars.codewars_ranking;
 
+/**
+ * https://www.codewars.com/kata/51fda2d95d6efda45e00004e
+ */
 public class User {
   public int rank = -8;
   public int progress = 0;
