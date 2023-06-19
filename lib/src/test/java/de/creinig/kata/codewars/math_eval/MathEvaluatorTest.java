@@ -1,7 +1,8 @@
 package de.creinig.kata.codewars.math_eval;
 
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 public class MathEvaluatorTest {
   private void eval(String expression, double expected) {
@@ -44,39 +45,55 @@ public class MathEvaluatorTest {
     eval("15/2", 7.5d);
   }
 
-  @Test public void testAddition() {
+  @Test
+  public void negation() {
+    eval("-(-5)", 5d);
+    eval("5--5", 10d);
+    eval("-(5+-3)", -2d);
+  }
+
+  @Test
+  public void testAddition() {
     assertEquals(2d, new MathEvaluator().calculate("1+1"), 0.01);
   }
-  
-  @Test public void testSubtraction() {
+
+  @Test
+  public void testSubtraction() {
     assertEquals(0d, new MathEvaluator().calculate("1 - 1"), 0.01);
   }
 
-  @Test public void testMultiplication() {
+  @Test
+  public void testMultiplication() {
     assertEquals(1d, new MathEvaluator().calculate("1* 1"), 0.01);
   }
 
-  @Test public void testDivision() {
+  @Test
+  public void testDivision() {
     assertEquals(1d, new MathEvaluator().calculate("1 /1"), 0.01);
   }
 
-  @Test public void testNegative() {
+  @Test
+  public void testNegative() {
     assertEquals(-123d, new MathEvaluator().calculate("-123"), 0.01);
   }
 
-  @Test public void testLiteral() {
+  @Test
+  public void testLiteral() {
     assertEquals(123d, new MathEvaluator().calculate("123"), 0.01);
   }
 
-  @Test public void testExpression() {
+  @Test
+  public void testExpression() {
     assertEquals(21.25, new MathEvaluator().calculate("2 /2+3 * 4.75- -6"), 0.01);
   }
 
-  @Test public void testSimple() {
+  @Test
+  public void testSimple() {
     assertEquals(1476d, new MathEvaluator().calculate("12* 123"), 0.01);
   }
 
-  @Test public void testComplex() {
+  @Test
+  public void testComplex() {
     assertEquals(7.732, new MathEvaluator().calculate("2 / (2 + 3) * 4.33 - -6"), 0.01);
   }
 }
