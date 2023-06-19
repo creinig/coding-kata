@@ -3,14 +3,14 @@
  */
 package de.creinig.kata;
 
-import static org.junit.Assert.assertTrue;
-
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
+
 public class LibraryTest {
-  @Test
-  public void someLibraryMethodReturnsTrue() {
-    Library classUnderTest = new Library();
-    assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
-  }
+    @Test
+    public void someLibraryMethodReturnsTrue() {
+        Library classUnderTest = new Library();
+        assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
+    }
 }
