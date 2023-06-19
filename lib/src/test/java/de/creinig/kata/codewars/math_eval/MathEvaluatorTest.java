@@ -53,6 +53,28 @@ public class MathEvaluatorTest {
   }
 
   @Test
+  public void complex01() {
+    eval("12* 123/-(-5 + 2)", 492.0);
+  }
+
+  @Test
+  public void complex02() {
+    eval("12* 123/(-5 + 2)", -492.0);
+  }
+
+  @Test
+  public void complex03() {
+    eval(
+        "(123.45*(678.90 / (-2.5+ 11.5)-(((80 -(19))) *33.25)) / 20) - (123.45*(678.90 / (-2.5+ 11.5)-(((80 -(19))) *33.25)) / 20) + (13 - 2)/ -(-11) ",
+        1.0);
+  }
+
+  @Test
+  public void multiNesting() {
+    eval("((80 - (19)))", 61.0);
+  }
+
+  @Test
   public void testAddition() {
     assertEquals(2d, new MathEvaluator().calculate("1+1"), 0.01);
   }

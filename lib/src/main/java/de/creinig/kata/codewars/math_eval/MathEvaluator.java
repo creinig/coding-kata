@@ -13,17 +13,12 @@ public class MathEvaluator {
   public double calculate(String expression) {
     trace("Evaluating <%s>", expression);
     List<Token> tokens = tokenize(expression);
+    trace("  Tokens: %s", tokens);
 
     Parser parser = new Parser(tokens);
     Node rootNode = parser.parse();
 
-    try {
-      return rootNode.eval();
-    }
-    catch (RuntimeException e) {
-      e.printStackTrace(System.out);
-      throw e;
-    }
+    return rootNode.eval();
   }
 
   private List<Token> tokenize(String expression) {
@@ -34,11 +29,9 @@ public class MathEvaluator {
       index = skipWhitespace(expression, index);
 
       if (!eof(expression, index)) {
-        trace("  tokenize@%d", index);
         Token token = nextToken(expression, index);
         index += token.text.length();
         tokens.add(token.withIndex(tokens.size()));
-        trace("   found %s", token);
       }
     }
 
@@ -87,11 +80,11 @@ public class MathEvaluator {
   }
 
   private static void trace(String format, Object... args) {
-    System.out.println(String.format(format, args));
+    System.out.printf((format) + "%n", args);
   }
 
-  private static enum TokenType {
-    LITERAL, GROUP_START, GROUP_END, OPERATION;
+  private enum TokenType {
+    LITERAL, GROUP_START, GROUP_END, OPERATION
   }
 
   /**
@@ -117,17 +110,14 @@ public class MathEvaluator {
     }
 
     public String toString() {
-      return type.name() + ":<" + text + ">";
+      return type.name() + ":<" + text + ">@" + tokenIndex;
     }
   }
 
   private static class Parser {
     private final List<Token> tokens;
-    private int nextPosition = 0;
-
-    private Deque<Token> previousTokens = new ArrayDeque<>();
-    private Deque<Node> values = new ArrayDeque<>();
-    private Deque<Token> operations = new ArrayDeque<>();
+    private final Deque<Node> values = new ArrayDeque<>();
+    private final Deque<Token> operations = new ArrayDeque<>();
 
     public Parser(List<Token> tokens) {
       this.tokens = tokens;
@@ -138,56 +128,89 @@ public class MathEvaluator {
         switch (token.type) {
         case GROUP_START -> operations.push(token);
         case LITERAL -> values.push(new Literal(Double.parseDouble(token.text)));
-        case OPERATION -> operations.push(token);
-        case GROUP_END -> values.push(processGroup());
+        case OPERATION -> handleOperation(token);
+        case GROUP_END -> values.push(handleGroup());
         }
       }
 
-      return processGroup();
+      return handleGroup();
     }
 
-    private Node processGroup() {
+    private void handleOperation(Token op) {
+      trace("  handleOp: %s", op);
+      while (!operations.isEmpty() && !isUnary(op) && (priority(operations.peek()) >= priority(op))) {
+        values.push(handleExpression());
+      }
+      operations.push(op);
+    }
+
+    private Node handleGroup() {
+      Node value = handleExpression();
+      if (!operations.isEmpty()) {
+        operations.pop();
+      }
+      return value;
+    }
+
+    private Node handleExpression() {
       if (operations.isEmpty()) {
         // Fragment "123"
+        trace("  handleExpr(ops == empty)");
         assert (values.size() == 1);
         return values.pop();
       }
       else if (operations.peek().type == TokenType.GROUP_START) {
         // Fragment "(123)"
-        operations.pop();
+        trace("  handleExpr(ops == simpleGroup)");
         return values.pop();
       }
 
       while (!operations.isEmpty() && (operations.peek().type != TokenType.GROUP_START)) {
         Token op = operations.pop();
+        trace("  handleExpr: %s", op);
         if (isUnary(op)) {
+          trace("    unary");
           values.push(new Negation(values.pop()));
         }
         else {
           Node rvalue = values.pop();
           Node lvalue = values.pop();
-          values.push(switch (op.text) {
-            case "-" -> new Subtraction(lvalue, rvalue);
-            case "+" -> new Addition(lvalue, rvalue);
-            case "*" -> new Multiplication(lvalue, rvalue);
-            case "/" -> new Division(lvalue, rvalue);
-            default -> null;
-          });
+          trace("    binary: %s, %s", lvalue, rvalue);
+          values.push(buildBinaryOp(op, lvalue, rvalue));
         }
-      }
-
-      if (!operations.isEmpty()) {
-        operations.pop();
       }
       return values.pop();
     }
 
-    private boolean isUnary(Token op) {
+    private static Node buildBinaryOp(Token op, Node lvalue, Node rvalue) {
       return switch (op.text) {
-        case "-", "+" ->
-            (op.tokenIndex == 0) || (tokens.get(op.tokenIndex - 1).type == TokenType.GROUP_START) || (tokens.get(
-                op.tokenIndex - 1).type == TokenType.OPERATION);
+        case "-" -> new Subtraction(lvalue, rvalue);
+        case "+" -> new Addition(lvalue, rvalue);
+        case "*" -> new Multiplication(lvalue, rvalue);
+        case "/" -> new Division(lvalue, rvalue);
+        default -> null;
+      };
+    }
+
+    private boolean isUnary(Token op) {
+      return mayBeUnary(op) &&
+          // may be unary, but only if there's no literal / ")" before it
+          (op.tokenIndex == 0) || (tokens.get(op.tokenIndex - 1).type == TokenType.GROUP_START) || (tokens.get(
+          op.tokenIndex - 1).type == TokenType.OPERATION);
+    }
+
+    private boolean mayBeUnary(Token op) {
+      return switch (op.text) {
+        case "+", "-" -> true;
         default -> false;
+      };
+    }
+
+    private int priority(Token op) {
+      return switch (op.text) {
+        case "*", "/" -> 2;
+        case "+", "-" -> 1;
+        default -> 0;
       };
     }
   }
@@ -197,36 +220,42 @@ public class MathEvaluator {
   }
 
   private record Literal(double value) implements Node {
+    @Override
     public double eval() {
       return this.value;
     }
   }
 
   private record Negation(Node target) implements Node {
+    @Override
     public double eval() {
       return -target.eval();
     }
   }
 
   private record Addition(Node left, Node right) implements Node {
+    @Override
     public double eval() {
       return left.eval() + right.eval();
     }
   }
 
   private record Subtraction(Node left, Node right) implements Node {
+    @Override
     public double eval() {
       return left.eval() - right.eval();
     }
   }
 
   private record Multiplication(Node left, Node right) implements Node {
+    @Override
     public double eval() {
       return left.eval() * right.eval();
     }
   }
 
   private record Division(Node left, Node right) implements Node {
+    @Override
     public double eval() {
       return left.eval() / right.eval();
     }
