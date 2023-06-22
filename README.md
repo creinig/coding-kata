@@ -13,3 +13,7 @@ developers.
 In other words, my focus is not on especially clever solutions, but on code that is easy to understand, easy to 
 maintain and easy to extend / modify.
 
+## Multiple Languages
+
+I keep kata implementations for multiple languages in this repository, mostly because they often implement the same kata.
+
