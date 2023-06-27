@@ -2,5 +2,6 @@ require 'bundler/setup'
 
 require "minitest/test_task"
 
-Minitest::TestTask.create
-
+Minitest::TestTask.create(:test) do |t|
+  t.extra_args = %w{--junit --junit-jenkins --junit-filename=junit-report.xml} 
+end

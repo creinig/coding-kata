@@ -1,13 +1,19 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    builder (3.2.4)
     minitest (5.16.3)
+    minitest-junit (1.1.0)
+      builder (~> 3.2)
+      minitest (~> 5.11)
 
 PLATFORMS
+  aarch64-linux-android
   x86_64-linux
 
 DEPENDENCIES
   minitest (~> 5.16.0)
+  minitest-junit
 
 BUNDLED WITH
    2.3.5
