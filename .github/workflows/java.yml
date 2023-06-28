@@ -33,3 +33,11 @@ jobs:
       with:
         arguments: build --scan
         build-root-directory: java
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v3
+        if: success() || failure() # always run even if the previous step fails
+        with:
+          report_paths: 'java/**/build/test-results/test/TEST-*.xml'
+          test_files_prefix: 'java/'
+          fail_on_failure: true
+          detailed_summary: true
