@@ -13,6 +13,9 @@ on:
   push:
   pull_request:
 
+permissions:
+  checks: write
+
 jobs:
   test:
 
