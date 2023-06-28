@@ -13,8 +13,13 @@ class TheLiftTest < Minitest::Test
 	    [ [ [],   [0,],  [],      [],   [2,],  [3,],  [] ],     [0, 5, 4, 3, 2, 1, 0] ]]
       
     for queues, answer in tests do
-      puts ">> Testing #{queues.inspect}"
       assert_equal answer, the_lift(queues, 5)
     end
+  end
+
+  def test_special1
+    queues = [[1, 1, 1, 1, 1], [0, 0]]
+    capacity = 3
+    assert_equal [0, 1, 0, 1, 0], the_lift(queues, capacity)
   end
 end
