@@ -1,8 +1,11 @@
 require 'pp'
+require 'creinig'
+
+include Creinig;
 
 # https://www.codewars.com/kata/52a78825cdfc2cfc87000005
 def calc expression
-  puts "calc(#{expression})"
+  log.debug "calc(#{expression})"
   token_index = -1
   tokens = expression.scan(/([()\/*+-]|\d+(\.\d+)?)/).map{|text| Token.new(text[0], token_index += 1)}
 
@@ -58,12 +61,12 @@ class Parser
 
       if unary? op and op.text == "-"
         # Negation
-        puts "  -#{@values.last}"
+        log.debug "  -#{@values.last}"
         @values << - @values.pop
       else
         rval = @values.pop
         lval = @values.pop
-        puts "  #{lval} #{op.text} #{rval}"
+        log.debug "  #{lval} #{op.text} #{rval}"
         @values.push binary_op(op, lval, rval)
       end
     end

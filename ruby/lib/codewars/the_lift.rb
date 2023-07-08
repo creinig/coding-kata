@@ -1,7 +1,10 @@
+require 'creinig'
+
+include Creinig
 
 # https://www.codewars.com/kata/58905bfa1decb981da00009e
 def the_lift(queues, capacity)
-  puts ">> Testing: #{queues.inspect}, #{capacity}"
+  log.debug ">> Testing: #{queues.inspect}, #{capacity}"
   visited = [0] # We start at ground floor
 
   lift = Lift.new(queues, capacity)
@@ -11,7 +14,7 @@ def the_lift(queues, capacity)
 
   visited << 0 unless visited.last == 0 # return to ground at end
 
-  puts "Movement: #{visited.inspect}"
+  log.debug "Movement: #{visited.inspect}"
   visited
 end
 
@@ -29,7 +32,7 @@ class Lift
   # Move the lift to the next floor and handle movement of people into / out of it.
   # Returns the floor number the lift moved to. Negative if no movement is required anymore
   def move(final)
-    puts "  @ floor #{@current_floor}, final=#{final}, state = #{self.inspect}"
+    log.debug "  @ floor #{@current_floor}, final=#{final}, state = #{self.inspect}"
     move_out
     move_in
 
@@ -50,7 +53,7 @@ class Lift
       end
     end
 
-    puts "   Moving #{@moving_up ? 'up' : 'down'} to floor #{floor}, passengers = #{@passengers}"
+    log.debug "   Moving #{@moving_up ? 'up' : 'down'} to floor #{floor}, passengers = #{@passengers}"
 
     @current_floor = floor if floor
     floor
@@ -59,7 +62,7 @@ class Lift
   def move_out
     staying = @passengers.select{|dest| dest != @current_floor }
 
-    puts "   Floor #{@current_floor}: #{@passengers.length - staying.length} passengers leaving" unless staying == @passengers
+    log.debug "   Floor #{@current_floor}: #{@passengers.length - staying.length} passengers leaving" unless staying == @passengers
 
     @passengers = staying
   end
@@ -77,7 +80,7 @@ class Lift
     end
 
     unless queue == remaining
-      puts "   Floor #{@current_floor}: #{queue.length - remaining.length} passengers entering, remaining: #{remaining.inspect}"
+      log.debug "   Floor #{@current_floor}: #{queue.length - remaining.length} passengers entering, remaining: #{remaining.inspect}"
     end
 
     @queues[@current_floor] = remaining
