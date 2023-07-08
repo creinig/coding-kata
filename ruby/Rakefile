@@ -5,5 +5,5 @@ require "minitest/test_task"
 # Run all tests. You can set the environment variable $LOG_LEVEL (default: WARN) to a different
 # value to show more information from within the code. Most log statements are at DEBUG level.
 Minitest::TestTask.create(:test) do |t|
-  t.extra_args = %w{--pride --junit --junit-jenkins --junit-filename=junit-report.xml} 
+  t.extra_args = %w{ --junit --junit-jenkins --junit-filename=junit-report.xml} 
 end
